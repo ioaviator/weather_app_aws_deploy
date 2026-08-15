@@ -1,0 +1,39 @@
+name: Terraform Deploy
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'terraform/**'
+  workflow_dispatch:
+
+jobs:
+  Terraform:
+    runs-on: ubuntu-latest
+
+    name: 'terraform-resources'
+    env:
+      AWS_SECRET_ACCESS_KEY : ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID : ${{ secrets.AWS_ACCESS_KEY_ID }}
+     
+      
+     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v7
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v4
+        with:
+          terraform_version: "1.14.6"
+
+      - name: 'Terraform init'
+        id: init
+        run: |
+          cd terraform
+          terraform init          
+                    
+      - name: 'Terraform apply'
+        id: apply
+        run: |
+          cd terraform
+          terraform apply --auto-approve 
