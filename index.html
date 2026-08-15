@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AWS ECR-ECS DEMO</title>
+    <title>Weather Forecast App</title>
+    <link rel="stylesheet" href="/templates/static/style.css">
 </head>
 <body>
-  <h1> Hello from AWS ECR-ECS Demo Project </h1>  
+    <header>
+        <h1>Weather Forecast Tracker</h1>
+        <p>Check real-time weather updates for any state in Nigeria</p>
+    </header>
+
+    <nav>
+        <a href="/">Home</a>
+        <a href="#about">About Us</a>
+    </nav>
+
+    <main>
+        <form method="get" action="/get_weather" class="weather-form">
+            <div class="form-group">
+                <label>State 1 (required):</label>
+                <input type="text" name="state_1" required placeholder="e.g. Lagos">
+            </div>
+            <div class="form-group">
+                <label>State 2 (optional):</label>
+                <input type="text" name="state_2" placeholder="e.g. Abuja">
+            </div>
+            <div class="form-group">
+                <label>State 3 (optional):</label>
+                <input type="text" name="state_3" placeholder="e.g. Kano">
+            </div>
+            <button type="submit">Get Weather Forecast</button>
+        </form>
+
+        {% if weather_data %}
+            <section class="weather-result">
+                {% for state, report in weather_data.items() %}
+                    <div class="weather-box">
+                        <h3>{{ state }}</h3>
+                        <ul>
+                            {% for key, value in report.items() %}
+                            <li><strong>{{ key }}:</strong> {{ value }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endfor %}
+            </section>
+        {% endif %}
+    </main>
+
+    <!-- <footer id="about">
+        <p>Built with FastAPI | Powered by Real-Time Data</p>
+    </footer> -->
 </body>
 </html>
