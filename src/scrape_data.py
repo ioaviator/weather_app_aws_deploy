@@ -81,10 +81,8 @@ def load_webpage():
 
     data  = scrape_data(html_content, 'lagos')
 
-    print(data)
+    return data
 
   finally:
     # close the browser session
     driver.quit()
-
-load_webpage()
