@@ -3,16 +3,6 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
-# Set up headless Chrome options (optional: remove headless if you want to see the browser open)
-options = Options()
-options.add_argument("--headless")  # Runs browser in the background without a GUI
-options.add_argument("--disable-gpu")
-options.add_argument("--no-sandbox")
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) " \
-  "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-
-# 2. Initialize the Selenium WebDriver
-driver = webdriver.Chrome(options=options)
 
 def scrape_data(response, state:str):
 
@@ -69,20 +59,35 @@ def scrape_data(response, state:str):
   return data
 
 
-def load_webpage():
+def load_webpage(states):
+  weather_data = []
+
+  # Set up headless Chrome options (optional: remove headless if you want to see the browser open)
+  options = Options()
+  options.add_argument("--headless=new")
+  options.add_argument("--disable-gpu")
+  options.add_argument("--no-sandbox")
+  options.add_argument("--disable-dev-shm-usage") # Overcomes limited resource problems in containers
+
+  options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) " \
+    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+
+   # Initialize the Selenium WebDriver once
+  driver = webdriver.Chrome(options=options)
+
   try:
-    # state = state.lower().replace(" ", "-")
-
-    url = f"https://www.timeanddate.com/weather/nigeria/lagos"
-    driver.get(url)
-
-    # Get the fully rendered page source from Selenium
-    html_content = driver.page_source
-
-    data  = scrape_data(html_content, 'lagos')
-
-    return data
+    for state in states:
+      state = state.lower().replace(" ", "-")
+      url = f"https://www.timeanddate.com/weather/nigeria/{state}"
+      
+      driver.get(url)
+      html_content = driver.page_source
+      
+      data = scrape_data(html_content, state)
+      weather_data.append(data)
 
   finally:
-    # close the browser session
+    # Close the browser session only AFTER all states have been processed
     driver.quit()
+
+  return weather_data
