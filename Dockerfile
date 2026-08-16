@@ -1,14 +1,13 @@
-# Stage 1: Build dependencies 
-FROM python:3.13.6 AS builder
+FROM python:3.13.6-slim AS builder
 
 WORKDIR /weather_app
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
 
+#------------------------
 
-#  Stage 2: lightweight image ---
-FROM python:3.13.6
+FROM python:3.13.6-slim
 
 WORKDIR /weather_app
 
