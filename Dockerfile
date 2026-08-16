@@ -13,7 +13,7 @@ FROM python:3.13.6
 WORKDIR /weather_app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    wget curl gnupg unzip libxi6 libgconf-2-4 libnss3 libatk-bridge2.0-0 \
+    wget curl gnupg unzip libxi6 libnss3 libatk-bridge2.0-0 \
     libcups2 libdrm2 libxcomposite1 libxdamage1 libxrandr2 libgbm1 libxss1 libpango-1.0-0 libcairo2 \
     && curl -sSL https://dl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg \
     && echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list \
